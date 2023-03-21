@@ -41,6 +41,11 @@
         border-radius: 5px;
       }
 
+      button:hover {
+        background-color: darkred;
+        color: white;
+      }
+
       button:disabled {
         background-color: #5a5a5a;
       }
@@ -74,18 +79,69 @@
         font-size: 1.2em;
         color: #333;
       }
+
+      .responsive-image {
+        width: 100%;
+        max-width: 600px; /* Adjust this value to control the maximum width on desktop or laptop screens */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      @media (min-width: 768px) {
+        .responsive-image {
+          width: 60%; /* Adjust this value to control the image width on desktop or laptop screens */
+        }
+      }
+
+      #rules ol {
+        list-style-position: inside; /* Move the numbers inside the list items */
+        padding-left: 0; /* Remove the default padding */
+      }
+
+      #rules li {
+        margin-bottom: 5px; /* Adjust the space between list items */
+      }
     </style>
   </head>
   <body>
     <h1>What The Phrase</h1>
-    <h3 id="subtitle">May the odds be ever in your favor</h3>
-    <button id="startBtn">Start</button>
+
+    <div id="rulesContainer">
+      <div id="rules">
+        <p>Rules:</p>
+        <ol>
+          <li>Tick the boxes as you hear the phrases uttered.</li>
+          <li>
+            Do <u>not</u> refresh the page after clicking Start or you will only
+            be able to enter the game again in 2 hours.
+          </li>
+          <li>You do not talk about The Game.</li>
+          <li>You DO NOT talk about The Game.</li>
+          <li>
+            If someone says stop, goes limp, or taps out, the fight is over.
+          </li>
+          <li>The person with the most points wins.</li>
+        </ol>
+      </div>
+      <h3 id="subtitle">May the odds be ever in your favor</h3>
+      <button id="startBtn">Start</button>
+      <br /><br /><br />
+      <img
+        id="myImage"
+        class="responsive-image"
+        src="/Users/kp/Documents/Coding Projects/what-the-phrase/katniss.jpeg"
+        alt="Katniss"
+      />
+    </div>
     <div id="phrasesContainer"></div>
     <p id="pointsText" style="display: none">
       Total points: <span id="totalPoints">0</span>
     </p>
 
     <script>
+      // Add your JavaScript code here
+
       // Provide the list of phrases here
       const phrases = [
         "I just want to check",
@@ -132,12 +188,58 @@
           parseInt(totalPoints.textContent) + (checkbox.checked ? 1 : -1);
       }
 
+      // Save the game state and timestamp to localStorage
+      function saveGameState() {
+        const gameState = {
+          phrases: phrasesContainer.innerHTML,
+          totalPoints: totalPoints.textContent,
+          timestamp: new Date().getTime(),
+        };
+        localStorage.setItem("gameState", JSON.stringify(gameState));
+      }
+
+      // Load the game state from localStorage
+      function loadGameState() {
+        const savedGameState = localStorage.getItem("gameState");
+        if (savedGameState) {
+          const gameState = JSON.parse(savedGameState);
+          const currentTime = new Date().getTime();
+          if (currentTime - gameState.timestamp < 2) {
+            // 2 hours in milliseconds
+            phrasesContainer.innerHTML = gameState.phrases;
+            totalPoints.textContent = gameState.totalPoints;
+            startBtn.disabled = true;
+            showFirstPageContent(false);
+          } else {
+            localStorage.removeItem("gameState");
+          }
+        }
+      }
+
+      function showFirstPageContent(show) {
+        document.getElementById("rulesContainer").style.display = show
+          ? "block"
+          : "none";
+        document.getElementById("subtitle").style.display = show
+          ? "block"
+          : "none";
+        document.getElementById("startBtn").style.display = show
+          ? "block"
+          : "none";
+      }
+
       // Get the start button and phrases container elements
       const startBtn = document.getElementById("startBtn");
       const phrasesContainer = document.getElementById("phrasesContainer");
 
       // Add a click event listener to the start button
       startBtn.addEventListener("click", () => {
+        // Hide the rules section and the image
+        document.getElementById("rulesContainer").style.display = "none";
+
+        // Hide the first page content
+        showFirstPageContent(false);
+
         const randomPhrases = generateRandomPhrases();
         phrasesContainer.innerHTML = "";
 
@@ -160,6 +262,8 @@
           phrasesContainer.appendChild(phraseDiv);
         }
 
+        saveGameState();
+
         // Show the total points text and hide the subtitle and start button
         document.getElementById("pointsText").style.display = "block";
         document.getElementById("subtitle").style.display = "none";
@@ -168,8 +272,7 @@
         // Disable the start button after it's clicked
         startBtn.disabled = true;
       });
-
-      // Add your JavaScript code here
+      loadGameState();
     </script>
   </body>
 </html>
