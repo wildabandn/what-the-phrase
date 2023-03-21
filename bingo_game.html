@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ringbearer&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>What The Phrase</title>
+    <style>
+      /* Add your CSS styles here */
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f5f5f5;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        color: #333;
+        margin-bottom: 30px;
+      }
+
+      h3 {
+        font-family: "Ringbearer", cursive;
+        font-size: 1.8em;
+        color: #a60c31;
+      }
+
+      button {
+        font-size: 1.2em;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: darkred;
+        color: white;
+      }
+
+      button:disabled {
+        background-color: #5a5a5a;
+      }
+
+      #phrasesContainer {
+        margin: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .phrase {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+        max-width: 500px; /* You can adjust this value based on your preference */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      input[type="checkbox"] {
+        width: 19px;
+        height: 19px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1.2em;
+        color: #333;
+      }
+
+      .responsive-image {
+        width: 100%;
+        max-width: 600px; /* Adjust this value to control the maximum width on desktop or laptop screens */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      @media (min-width: 768px) {
+        .responsive-image {
+          width: 60%; /* Adjust this value to control the image width on desktop or laptop screens */
+        }
+      }
+
+      #rules ol {
+        list-style-position: inside; /* Move the numbers inside the list items */
+        padding-left: 0; /* Remove the default padding */
+      }
+
+      #rules li {
+        margin-bottom: 5px; /* Adjust the space between list items */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>What The Phrase</h1>
+
+    <div id="rulesContainer">
+      <div id="rules">
+        <p>Rules:</p>
+        <ol>
+          <li>Tick the boxes as you hear the phrases uttered.</li>
+          <li>
+            Do <u>not</u> refresh the page after clicking Start or you will only
+            be able to enter the game again in 2 hours.
+          </li>
+          <li>You do not talk about The Game.</li>
+          <li>You DO NOT talk about The Game.</li>
+          <li>
+            If someone says stop, goes limp, or taps out, the fight is over.
+          </li>
+          <li>The person with the most points wins.</li>
+        </ol>
+      </div>
+      <h3 id="subtitle">May the odds be ever in your favor</h3>
+      <button id="startBtn">Start</button>
+      <br /><br /><br />
+      <img
+        id="myImage"
+        class="responsive-image"
+        src="/Users/kp/Documents/Coding Projects/what-the-phrase/katniss.jpeg"
+        alt="Katniss"
+      />
+    </div>
+    <div id="phrasesContainer"></div>
+    <p id="pointsText" style="display: none">
+      Total points: <span id="totalPoints">0</span>
+    </p>
+
+    <script>
+      // Add your JavaScript code here
+
+      // Provide the list of phrases here
+      const phrases = [
+        "I just want to check",
+        "Having said that",
+        "Not just copyediting",
+        "Organize a talk here",
+        "Go out more often",
+        "Buy them lunch",
+        "Chicken rice",
+        "Char Kway Tiao",
+        "Anyone from Singapore",
+        "What's our overseas office doing",
+        "In some HDB estate",
+        "The best journal in the world",
+        "What school are you from",
+        "HR must...",
+        "Not just talking",
+        "Very ignorant",
+        "We have such a big office",
+        "Who are the experts in Singapore",
+        "Not doing your job",
+        "We have good people",
+      ];
+
+      // Function to generate a random phrase from the list
+      // Function to generate 4 random phrases from the list
+      function generateRandomPhrases() {
+        let selectedPhrases = [];
+        let tempPhrases = [...phrases];
+
+        for (let i = 0; i < 10; i++) {
+          const randomIndex = Math.floor(Math.random() * tempPhrases.length);
+          selectedPhrases.push(tempPhrases[randomIndex]);
+          tempPhrases.splice(randomIndex, 1);
+        }
+
+        return selectedPhrases;
+      }
+
+      // Function to handle checkbox changes
+      function handleCheckboxChange(checkbox) {
+        const totalPoints = document.getElementById("totalPoints");
+        totalPoints.textContent =
+          parseInt(totalPoints.textContent) + (checkbox.checked ? 1 : -1);
+      }
+
+      // Save the game state and timestamp to localStorage
+      function saveGameState() {
+        const gameState = {
+          phrases: phrasesContainer.innerHTML,
+          totalPoints: totalPoints.textContent,
+          timestamp: new Date().getTime(),
+        };
+        localStorage.setItem("gameState", JSON.stringify(gameState));
+      }
+
+      // Load the game state from localStorage
+      function loadGameState() {
+        const savedGameState = localStorage.getItem("gameState");
+        if (savedGameState) {
+          const gameState = JSON.parse(savedGameState);
+          const currentTime = new Date().getTime();
+          if (currentTime - gameState.timestamp < 2) {
+            // 2 hours in milliseconds
+            phrasesContainer.innerHTML = gameState.phrases;
+            totalPoints.textContent = gameState.totalPoints;
+            startBtn.disabled = true;
+            showFirstPageContent(false);
+          } else {
+            localStorage.removeItem("gameState");
+          }
+        }
+      }
+
+      function showFirstPageContent(show) {
+        document.getElementById("rulesContainer").style.display = show
+          ? "block"
+          : "none";
+        document.getElementById("subtitle").style.display = show
+          ? "block"
+          : "none";
+        document.getElementById("startBtn").style.display = show
+          ? "block"
+          : "none";
+      }
+
+      // Get the start button and phrases container elements
+      const startBtn = document.getElementById("startBtn");
+      const phrasesContainer = document.getElementById("phrasesContainer");
+
+      // Add a click event listener to the start button
+      startBtn.addEventListener("click", () => {
+        // Hide the rules section and the image
+        document.getElementById("rulesContainer").style.display = "none";
+
+        // Hide the first page content
+        showFirstPageContent(false);
+
+        const randomPhrases = generateRandomPhrases();
+        phrasesContainer.innerHTML = "";
+
+        for (const phrase of randomPhrases) {
+          const phraseDiv = document.createElement("div");
+          phraseDiv.classList.add("phrase");
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.addEventListener("change", () =>
+            handleCheckboxChange(checkbox)
+          );
+
+          const label = document.createElement("label");
+          label.textContent = phrase;
+
+          phraseDiv.appendChild(checkbox);
+          phraseDiv.appendChild(label);
+
+          phrasesContainer.appendChild(phraseDiv);
+        }
+
+        saveGameState();
+
+        // Show the total points text and hide the subtitle and start button
+        document.getElementById("pointsText").style.display = "block";
+        document.getElementById("subtitle").style.display = "none";
+        startBtn.style.display = "none"; // Add this line
+
+        // Disable the start button after it's clicked
+        startBtn.disabled = true;
+      });
+      loadGameState();
+    </script>
+  </body>
+</html>
