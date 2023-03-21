@@ -25,6 +25,10 @@
         margin-bottom: 30px;
       }
 
+      .body-content-hidden h1 {
+        margin-bottom: 0;
+      }
+
       h3 {
         font-family: "Ringbearer", cursive;
         font-size: 1.8em;
@@ -48,6 +52,11 @@
 
       button:disabled {
         background-color: #5a5a5a;
+      }
+
+      .body-content-hidden {
+        margin-top: 0;
+        padding-top: 10px;
       }
 
       #phrasesContainer {
@@ -106,7 +115,6 @@
   </head>
   <body>
     <h1>What The Phrase</h1>
-
     <div id="rulesContainer">
       <div id="rules">
         <p>Rules:</p>
@@ -228,6 +236,7 @@
         document.getElementById("startBtn").style.display = show
           ? "block"
           : "none";
+        document.body.classList.toggle("body-content-hidden", !show);
       }
 
       // Get the start button and phrases container elements
