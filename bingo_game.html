@@ -84,6 +84,15 @@
         align-items: center;
       }
 
+      .label-container label {
+        white-space: nowrap;
+        max-width: calc(
+          100% - 24px
+        ); /* 100% minus the width of the checkbox and a little extra space */
+        overflow-wrap: break-word; /* Add this line */
+        word-break: break-word; /* Add this line for better cross-browser support */
+      }
+
       input[type="checkbox"] {
         width: 23px; /* Increase the size of the checkboxes */
         height: 23px;
