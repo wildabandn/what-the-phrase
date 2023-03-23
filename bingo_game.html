@@ -20,7 +20,7 @@
       }
 
       h1 {
-        font-size: 2.5em;
+        font-size: 2em;
         color: #333;
         margin-bottom: 30px;
       }
@@ -119,7 +119,11 @@
       <div id="rules">
         <p>Rules:</p>
         <ol>
-          <li>Tick the relevant boxes as you hear the phrases uttered.</li>
+          <li>
+            Every player will be given the same number of randomly generated
+            phrases.
+          </li>
+          <li>Tick the relevant boxes if the phrases are uttered.</li>
           <li>
             Do <u>not</u> refresh the page after clicking Start or you will only
             be able to enter the game again in 2 hours.
@@ -132,7 +136,9 @@
           <li>The person with the most points wins.</li>
         </ol>
       </div>
-      <br />
+      <h3 id="subtitle">May the odds be ever in your favor</h3>
+      <button id="startBtn">START</button>
+      <br /><br /><br />
       <img
         id="myImage"
         class="responsive-image"
@@ -140,10 +146,7 @@
         alt="Katniss pic"
       />
     </div>
-    <br />
-    <h3 id="subtitle">May the odds be ever in your favor</h3>
-    <button id="startBtn">Start</button>
-    <br />
+
     <div id="phrasesContainer"></div>
     <p id="pointsText" style="display: none">
       Total points: <span id="totalPoints">0</span>
@@ -162,6 +165,7 @@
         "Buy them lunch",
         "Chicken rice",
         "Char Kway Tiao",
+        "Curry chicken",
         "Anyone from Singapore",
         "What's our overseas office doing",
         "In some HDB estate",
@@ -169,11 +173,22 @@
         "What school are you from",
         "HR must...",
         "Not just talking",
-        "Very ignorant",
+        "Ignorant",
         "We have such a big office",
         "Who are the experts in Singapore",
         "Not doing your job",
         "We have good people",
+        "Bring them here",
+        "Not everything the boss",
+        "You people do it",
+        "Editor are very important people",
+        "Don't be shy",
+        "Organize a series of lectures/Give a lecture",
+        "I don't want to be involved",
+        "Lee Kuan Yew",
+        "Not many Singapore companies have [that many] overseas offices",
+        "Gym",
+        "A*STAR",
       ];
 
       // Function to generate a random phrase from the list
@@ -182,7 +197,7 @@
         let selectedPhrases = [];
         let tempPhrases = [...phrases];
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 16; i++) {
           const randomIndex = Math.floor(Math.random() * tempPhrases.length);
           selectedPhrases.push(tempPhrases[randomIndex]);
           tempPhrases.splice(randomIndex, 1);
