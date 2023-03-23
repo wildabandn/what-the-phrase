@@ -70,7 +70,7 @@
         margin-bottom: 5px;
         display: flex;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
         flex-direction: row;
         width: 100%;
         max-width: 500px;
@@ -91,6 +91,13 @@
         ); /* 100% minus the width of the checkbox and a little extra space */
         overflow-wrap: break-word;
         word-break: break-word;
+        text-align: left;
+      }
+
+      .wrapper-div {
+        display: flex;
+        align-items: center;
+        width: 100%;
       }
 
       input[type="checkbox"] {
@@ -99,7 +106,6 @@
         margin-bottom: 10px;
         margin-right: 10px; /* Add space between the checkbox and the label */
         flex-shrink: 0; /* Add this line */
-        margin-right: 5px; /* Add this line */
       }
 
       p {
@@ -207,7 +213,7 @@
         "Organize a series of lectures/Give a lecture",
         "I don't want to be involved",
         "Lee Kuan Yew",
-        "Not many Singapore companies have (that many) overseas offices",
+        "Not many Singapore companies have",
         "Gym",
         "A*STAR",
       ];
@@ -310,8 +316,11 @@
           labelContainer.classList.add("label-container");
           labelContainer.appendChild(label);
 
-          phraseDiv.appendChild(checkbox);
-          phraseDiv.appendChild(label);
+          const wrapperDiv = document.createElement("div");
+          wrapperDiv.classList.add("wrapper-div"); // Add the "wrapper-div" class to the wrapperDiv
+          wrapperDiv.appendChild(checkbox);
+          wrapperDiv.appendChild(label);
+          phraseDiv.appendChild(wrapperDiv);
 
           phrasesContainer.appendChild(phraseDiv);
         }
