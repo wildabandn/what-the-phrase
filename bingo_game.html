@@ -73,15 +73,17 @@
         align-items: center;
         flex-direction: row;
         width: 100%;
-        max-width: 500px; /* You can adjust this value based on your preference */
+        max-width: 500px;
         margin-left: auto;
         margin-right: auto;
+        font-size: 1.4em; /* Increase the font size for better readability on mobile devices */
       }
 
       input[type="checkbox"] {
-        width: 19px;
-        height: 19px;
+        width: 32px; /* Increase the size of the checkboxes */
+        height: 32px;
         margin-bottom: 10px;
+        margin-right: 10px; /* Add space between the checkbox and the label */
       }
 
       p {
@@ -100,6 +102,9 @@
       @media (min-width: 768px) {
         .responsive-image {
           width: 60%; /* Adjust this value to control the image width on desktop or laptop screens */
+        }
+        .phrase {
+          font-size: 1.2em;
         }
       }
 
@@ -280,6 +285,7 @@
           );
 
           const label = document.createElement("label");
+          label.htmlFor = checkbox.id = `checkbox-${phrase}`; // Add an ID to the checkbox and associate it with the label
           label.textContent = phrase;
 
           phraseDiv.appendChild(checkbox);
